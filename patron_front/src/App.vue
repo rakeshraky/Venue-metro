@@ -241,7 +241,7 @@ export default {
   methods:{
       getmembers(coords){
           this.loading = true
-          axios.get("/search/",  {
+          axios.get("/api/search/",  {
     params: {
       lat: coords.lat,
       lng: coords.lng
