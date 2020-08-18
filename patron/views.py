@@ -11,6 +11,8 @@ from itertools import chain
 from django.http import JsonResponse
 from django.core import serializers
 
+def index(request):
+    return render(request, template_name='index.html')
 
 def get_members(request):
     # lat = request.GET['lat']
