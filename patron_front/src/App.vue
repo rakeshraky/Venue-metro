@@ -298,7 +298,6 @@ export default {
                         this.updatecount(this.marker_count)
                     })
                     .catch(error => alert(error));
-      
       // this.testGoogleMaps()
   },
   computed:{
@@ -328,7 +327,6 @@ export default {
                      }
                      postal_code_match = this.post_selected.includes(member.postal_code)
                      }
-
               return post_match && name_match && tier_match && gender_match && status_match && postal_code_match
               //  && age_match 
           })
