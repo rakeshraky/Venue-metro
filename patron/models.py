@@ -126,3 +126,18 @@ class Members(models.Model):
     class Meta:
         managed = False
         db_table = 'Members'
+
+
+class Australianpostcodes(models.Model):
+    id = models.AutoField(db_column='ID', primary_key=True)  # Field name made lowercase.
+    geopoint = models.CharField(db_column='GeoPoint', max_length=64, blank=True, null=True)  # Field name made lowercase.
+    type = models.CharField(db_column='Type', max_length=24, blank=True, null=True)  # Field name made lowercase.
+    coordinates = models.TextField(db_column='Coordinates', blank=True, null=True)  # Field name made lowercase.
+    postcode = models.IntegerField(db_column='Postcode', blank=True, null=True)  # Field name made lowercase.
+    state = models.CharField(db_column='State', max_length=12, blank=True, null=True)  # Field name made lowercase.
+    colour = models.CharField(db_column='Colour', max_length=12, blank=True, null=True)  # Field name made lowercase.
+    opacity = models.DecimalField(db_column='Opacity', max_digits=13, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Australianpostcodes'

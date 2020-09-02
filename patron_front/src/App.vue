@@ -173,7 +173,7 @@ export default {
   
   data(){
      return{
-       polygonoptions:{strokeWeight: 2.0, fillColor: 'green'},
+       polygonoptions:{strokeWeight: 2.0, fillColor: 'red'},
        loading: false,
        value: [1, 100],
        members:[], 
@@ -184,12 +184,7 @@ export default {
        checked_tier: [],
        checked_gender: [],
        checked_status: [],
-       options: [
-          { value: 2539, text: '2539' },
-          { value: 2440, text: '2440' },
-          { value: 2260, text: '2260' },
-          { value: 2565, text: '2565' }
-        ],
+       options: [],
       post_selected:[],
        name_input: "",
        post_input: "",
@@ -206,52 +201,9 @@ export default {
       perPage: 8,
       count_text:"",
       postalpath: [],
-      postal_codes: {2539: 
-                        [{lng:138.6078044420001,	lat: -34.92113193899996},
-                          {lng:138.60182698300002	 ,lat:-34.92144599499994},
-                          {lng:138.60167977900005	 ,lat:-34.918746030999955},
-                          {lng:138.60158542600004	 ,lat:-34.91832959499993},	 
-                        {lng:138.601520638	, lat:-34.917234210999936},
-                          {lng:138.60321982300002,	lat: -34.91779788699994}	,
-                        {lng:138.60378217800007	 ,lat:-34.91786430199994}	,
-                        {lng:138.60406545500007	 ,lat:-34.917852239999945},
-                        {lng:138.60457309700007	 ,lat:-34.91773263799996},
-                          {lng:138.60507566500007,	lat: -34.91746542399994}	,
-                        {lng:138.60533054500002	 ,lat:-34.91727777799997},
-                          {lng:138.6058745040001	, lat:-34.91675343299994}	 ,
-                        {lng:138.60595757800002	 ,lat:-34.91694424199994}	,
-                        {lng:138.6060819700001	 ,lat:-34.91686702299995},
-                          {lng:138.60741141000005	, lat:-34.91642280099995}	,
-                        {lng:138.60818590400004	, lat:-34.91645262299994}	,
-                        {lng:138.60815447700008	, lat:-34.91705020999996}	 ,
-                        {lng:138.60822539600008	, lat:-34.917963776999954},
-                          {lng:138.6077919590001	 ,lat:-34.917664446999936},
-                        {lng:138.6064514960001	 ,lat:-34.91806262199998},
-                          {lng:138.6078044420001	, lat:-34.92113193899996}],
-                      2440: [ { lng: 130.83454, lat: -12.457984},
-                                {lng:130.833356,lat:-12.45684},
-                                {lng:130.836419,lat:-12.455983},
-                                {lng:130.836942,lat:-12.452624},
-                                {lng:130.83969,lat:-12.454085},
-                                {lng:130.841023,lat:-12.452291},
-                                {lng:130.850171,lat:-12.453012} 
-                              ] ,
-                      2260: [{lng:130.844301,lat:-12.473711},
-                                {lng:130.841171,lat:-12.473103},
-                                {lng:130.843431,lat:-12.469112},
-                                {lng:130.834541,lat:-12.462259},
-                                {lng:130.83331,lat:-12.460606},
-                                {lng:130.83454,lat:-12.457984} 
-                              ],
-                      2565: [{lng:130.841023,lat:-12.452291},
-                                {lng:130.850171,lat:-12.453012},
-                                {lng:130.848759,lat:-12.455856},
-                                {lng:130.850435,lat:-12.456366}
-                              ],
-                },
-      }  
-  },
-
+      postal_codes: {},
+  }
+},
   components:{
        patron,
        VueSlider
@@ -259,7 +211,7 @@ export default {
   methods:{
       getmembers(coords){
           this.loading = true
-          axios.get("/api/search/",  {
+          axios.get("http://127.0.0.1:8000/search/",  {
     params: {
       lat: coords.lat,
       lng: coords.lng
@@ -267,6 +219,12 @@ export default {
   })
           .then(res => {
             var data = JSON.parse(res.data.data)
+            var postvalues = []
+            this.postal_codes = res.data.postcodes
+            Object.keys(res.data.postcodes).forEach(function(key) {
+                postvalues.push({value:parseInt(key), text:key})
+            });
+            this.options = postvalues
             this.totalcount = data.length
             this.out_count = data.length - res.data.count
             this.marker_count = res.data.count
