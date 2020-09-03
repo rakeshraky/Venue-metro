@@ -23,7 +23,7 @@ def get_members(request):
     lat = "-33.9286"
     lng = "150.9180"
     # queryset = Members.objects.filter().all()[0:100]
-    queryset = Members.objects.raw("select top 100* from Members a inner join Australianpostcodes b on a.postal_code = b.Postcode where b.Type = 'Polygon'")
+    queryset = Members.objects.raw("select top 10* from Members a inner join Australianpostcodes b on a.postal_code = b.Postcode where b.Type = 'Polygon'")
     postcodes = {}
     for i in queryset:
         i.latitude = eval(i.GeoPoint)[0]
@@ -40,7 +40,7 @@ def get_members(request):
                         coords.append(
                             {"lng": m[0], "lat": m[1]}
                         )
-        postcodes[i.postal_code] = coords
+        postcodes[i.postal_code] = {"coords": coords, "color": "blue", "postcode": i.postal_code}
     qs_json = serializers.serialize('json', queryset)
     # query = "SELECT * FROM Members a WHERE (acos(sin(a.latitude * 0.0175) * sin(%s * 0.0175) + cos(a.latitude * 0.0175) * cos(%s * 0.0175) * cos((%s * 0.0175) - (a.longitude * 0.0175))) * 3959 <= 62)" % (lat, lat, lng)
     # queryset2 = Members.objects.raw(query)

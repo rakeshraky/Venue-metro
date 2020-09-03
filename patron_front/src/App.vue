@@ -127,7 +127,7 @@
               />
               
               <gmap-polygon 
-              :paths="postalpath" :options="polygonoptions"
+              :key=m.postcode v-for="m in postalpath" :paths="m.coords" :options="polygonoptions" :title="m.postcode" @click="polyfunc(m.postcode)"
               >
               </gmap-polygon>
 
@@ -173,6 +173,7 @@ export default {
   
   data(){
      return{
+       polytitle: "12345",
        polygonoptions:{strokeWeight: 2.0, fillColor: 'red'},
        loading: false,
        value: [1, 100],
@@ -202,6 +203,11 @@ export default {
       count_text:"",
       postalpath: [],
       postal_codes: {},
+      label: {
+    text: "12345",
+    color: "black",
+    textShadow: "2px 2px 2px #000000"
+  }
   }
 },
   components:{
@@ -209,12 +215,13 @@ export default {
        VueSlider
   },
   methods:{
-      getmembers(coords){
+      getmembers(){
+          this.coordinates = {"lat": -33.9286, "lng": 150.9180}
           this.loading = true
-          axios.get("http://127.0.0.1:8000/search/",  {
+          axios.get("search/",  {
     params: {
-      lat: coords.lat,
-      lng: coords.lng
+      lat: this.coordinates.lat,
+      lng: this.coordinates.lng
     }
   })
           .then(res => {
@@ -255,6 +262,13 @@ export default {
           }else{
             this.count_text = "Total count outside radius: " + this.out_count
           }
+        },
+        polyfunc(postcode){
+          var index = this.post_selected.indexOf(postcode);
+          this.post_selected.splice(index, 1);
+          if (this.post_selected.length < 1 ){
+                this.postalpath = []
+          }
         }
 //         testGoogleMaps(){
 //           this.$gmapApiPromiseLazy().then(() => {
@@ -266,15 +280,16 @@ export default {
       
   },
   created(){
-      this.$getLocation({})
-                    .then(coordinates => {
-                        this.coordinates = coordinates;
-                        this.coordinates = {"lat": -33.9286, "lng": 150.9180}
-                        this.getmembers(this.coordinates)
-                        this.updatecount(this.marker_count)
-                    })
-                    .catch(error => alert(error));
+      // this.$getLocation({})
+      //               .then(coordinates => {
+      //                   this.coordinates = coordinates;
+      //                   this.coordinates = {"lat": -33.9286, "lng": 150.9180}
+      //                   this.getmembers(this.coordinates)
+      //                   this.updatecount(this.marker_count)
+      //               })
+      //               .catch(error => alert(error));
       // this.testGoogleMaps()
+      this.getmembers()
   },
   computed:{
     // google:gmapApi,
